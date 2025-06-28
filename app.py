@@ -22,7 +22,7 @@ with open('config.yaml') as file:
     config = yaml.safe_load(file)
 
 username, password = st.secrets['auth']['username'], st.secrets['auth']['password']
-config['credentials']['usernames'][username]['password'] = password
+config['credentials']['usernames']['shiro1729']['password'] = password
 
 # @st.cache_data
 def load_excel(url):
