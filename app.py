@@ -6,8 +6,6 @@ import pandas as pd
 import streamlit as st
 from io import BytesIO 
 from dotenv import load_dotenv
-import matplotlib.pyplot as plt 
-import matplotlib.ticker as ticker
 from rmb_converter import to_rmb_upper
 import streamlit_authenticator as stauth
 
@@ -167,8 +165,6 @@ if auth_status:
 
         df_wide = df_long.pivot(index='month', columns='公司', values='月收入')
         st.line_chart(df_wide, x_label="月份", y_label="公司")
-
-
 
 elif auth_status is False:
     st.error("Username or password is incorrect.")
