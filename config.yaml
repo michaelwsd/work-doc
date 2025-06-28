@@ -10,7 +10,7 @@ credentials:
       first_name: MW
       last_name: ""
       logged_in: False # Will be managed automatically
-      password: Aa177678220
+      password: abc123
       roles: # Optional
       - admin
       - editor
