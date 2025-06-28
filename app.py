@@ -144,27 +144,25 @@ if auth_status:
         st.write("## Raw Data Preview")
         st.dataframe(df)
 
-        st.write('## Company by Revenue')
-        df_sorted = df.sort_values(by='收入', ascending=True)
-        df_sorted['公司'] = df_sorted['公司'].apply(lambda x: x[:-4])
+        df['Company'] = ['C' + str(i) for i in range(len(df))]
+        df.rename(columns={'收入':'Revenue'}, inplace=True)
 
-        # Set Chinese font before plotting
-        font_path = "fonts/NotoSansSC-Regular.ttf"
-        font_prop = font_manager.FontProperties(fname=font_path)
-        plt.rcParams['font.family'] = font_prop.get_name()  
+        st.write('## Company by Revenue')
+        df_sorted = df.sort_values(by='Revenue', ascending=True)
         plt.rcParams['axes.unicode_minus'] = False  # fix minus sign issue
 
         # Create the plot
         fig, ax = plt.subplots(figsize=(10, 6))
+        ax.set_xlabel("")
         ax.yaxis.set_major_formatter(ticker.FuncFormatter(millions))
-        df_sorted.plot(x="公司", y="收入", kind="bar", ax=ax)
+        df_sorted.plot(x="Company", y="Revenue", kind="bar", ax=ax)
 
         # Rotate x labels for better readability
         plt.xticks(rotation=45)
 
         # Label axes
-        plt.xlabel("公司")
-        plt.ylabel("收入")
+        plt.xlabel("Company")
+        plt.ylabel("Revenue")
 
         # Display the plot in Streamlit
         st.pyplot(fig)
