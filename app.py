@@ -8,6 +8,7 @@ from io import BytesIO
 from dotenv import load_dotenv
 import matplotlib.pyplot as plt 
 import matplotlib.ticker as ticker
+from matplotlib import font_manager
 from rmb_converter import to_rmb_upper
 import streamlit_authenticator as stauth
 
@@ -22,7 +23,7 @@ with open('config.yaml') as file:
     config = yaml.safe_load(file)
 
 username, password = st.secrets['auth']['username'], st.secrets['auth']['password']
-config['credentials']['usernames']['shiro1729']['password'] = password
+config['credentials']['usernames'][username]['password'] = password
 
 # @st.cache_data
 def load_excel(url):
@@ -148,7 +149,9 @@ if auth_status:
         df_sorted['公司'] = df_sorted['公司'].apply(lambda x: x[:-4])
 
         # Set Chinese font before plotting
-        plt.rcParams['font.sans-serif'] = ['SimHei']  
+        font_path = "fonts/NotoSansSC-Regular.ttf"
+        font_prop = font_manager.FontProperties(fname=font_path)
+        plt.rcParams['font.family'] = font_prop.get_name()  
         plt.rcParams['axes.unicode_minus'] = False  # fix minus sign issue
 
         # Create the plot
