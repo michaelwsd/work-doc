@@ -8,7 +8,6 @@ from io import BytesIO
 from dotenv import load_dotenv
 import matplotlib.pyplot as plt 
 import matplotlib.ticker as ticker
-from matplotlib import font_manager
 from rmb_converter import to_rmb_upper
 import streamlit_authenticator as stauth
 
