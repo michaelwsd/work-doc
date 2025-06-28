@@ -143,28 +143,32 @@ if auth_status:
         st.write("## Raw Data Preview")
         st.dataframe(df)
 
-        df['Company'] = ['C' + str(i) for i in range(len(df))]
-        df.rename(columns={'收入':'Revenue'}, inplace=True)
+        # 2. revenue/company
+        st.write('## Company Revenue Total')
+        st.bar_chart(df, x="公司", y="收入")
 
-        st.write('## Company by Revenue')
-        df_sorted = df.sort_values(by='Revenue', ascending=True)
-        plt.rcParams['axes.unicode_minus'] = False  # fix minus sign issue
+        # 3. trend lines 
+        st.write('## Company Revenue Trend')
+        month_cols = ['一月', '二月', '三月', '四月', '五月', '六月',
+              '七月', '八月', '九月', '十月', '十一月', '十二月']
 
-        # Create the plot
-        fig, ax = plt.subplots(figsize=(10, 6))
-        ax.set_xlabel("")
-        ax.yaxis.set_major_formatter(ticker.FuncFormatter(millions))
-        df_sorted.plot(x="Company", y="Revenue", kind="bar", ax=ax)
+        df_long = df.melt(
+            id_vars=['公司', '收入'],
+            value_vars=month_cols,
+            var_name='月份',
+            value_name='月收入'
+        )
 
-        # Rotate x labels for better readability
-        plt.xticks(rotation=45)
+        month_map = {
+            '一月': 1, '二月': 2, '三月': 3, '四月': 4, '五月': 5, '六月': 6,
+            '七月': 7, '八月': 8, '九月': 9, '十月': 10, '十一月': 11, '十二月': 12
+        }
+        df_long['month'] = df_long['月份'].map(month_map)
 
-        # Label axes
-        plt.xlabel("Company")
-        plt.ylabel("Revenue")
+        df_wide = df_long.pivot(index='month', columns='公司', values='月收入')
+        st.line_chart(df_wide, x_label="月份", y_label="公司")
 
-        # Display the plot in Streamlit
-        st.pyplot(fig)
+
 
 elif auth_status is False:
     st.error("Username or password is incorrect.")
