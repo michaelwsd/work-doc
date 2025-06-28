@@ -82,7 +82,7 @@ if auth_status:
                 margin: 4px 2px;
                 cursor: pointer;
             ">
-                Open Receipt
+                Receipt
             </a>
         ''', unsafe_allow_html=True)
         
@@ -99,7 +99,7 @@ if auth_status:
                 margin: 4px 2px;
                 cursor: pointer;
             ">
-                Open Receipt
+                Contract
             </a>
         ''', unsafe_allow_html=True)
 
