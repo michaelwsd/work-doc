@@ -12,14 +12,17 @@ from rmb_converter import to_rmb_upper
 import streamlit_authenticator as stauth
 
 load_dotenv()
-receipt_url = os.getenv("receipt_url")
-contract_url = os.getenv("contract_url")
-data_url = os.getenv("data_url")
-receipt_download = os.getenv("receipt_download")
+receipt_url = st.secrets["general"]["receipt_url"]
+contract_url = st.secrets["general"]["contract_url"]
+data_url = st.secrets["general"]["data_url"]
+receipt_download = st.secrets["general"]["receipt_download"]
 
 # load config
 with open('config.yaml') as file:
     config = yaml.safe_load(file)
+
+username, password = st.secrets['auth']['username'], st.secrets['auth']['password']
+config['credentials']['usernames'][username]['password'] = password
 
 # @st.cache_data
 def load_excel(url):
