@@ -69,11 +69,39 @@ if auth_status:
     if st.session_state.page == "main":
         # document files
         st.subheader("Documents")
-        if st.button("Receipt"):
-            open_doc(receipt_url)
-
-        if st.button("Contract"):
-            open_doc(contract_url)
+        st.markdown(f'''
+            <a href="{receipt_url}" target="_blank" style="
+                display: inline-block;
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px 24px;
+                text-align: center;
+                text-decoration: none;
+                font-weight: bold;
+                border-radius: 8px;
+                margin: 4px 2px;
+                cursor: pointer;
+            ">
+                Open Receipt
+            </a>
+        ''', unsafe_allow_html=True)
+        
+        st.markdown(f'''
+            <a href="{contract_url}" target="_blank" style="
+                display: inline-block;
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px 24px;
+                text-align: center;
+                text-decoration: none;
+                font-weight: bold;
+                border-radius: 8px;
+                margin: 4px 2px;
+                cursor: pointer;
+            ">
+                Open Receipt
+            </a>
+        ''', unsafe_allow_html=True)
 
         st.subheader("Rules")
         st.markdown(
