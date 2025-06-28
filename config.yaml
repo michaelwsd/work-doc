@@ -1,0 +1,17 @@
+cookie:
+  expiry_days: 30
+  key: abc
+  name: abc
+credentials:
+  usernames:
+    shiro1729:
+      email: a0416517630@icloud.com
+      failed_login_attempts: 0 # Will be managed automatically
+      first_name: MW
+      last_name: ""
+      logged_in: False # Will be managed automatically
+      password: Aa177678220
+      roles: # Optional
+      - admin
+      - editor
+      - viewer
