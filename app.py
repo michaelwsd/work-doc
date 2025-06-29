@@ -1,19 +1,12 @@
-import os
+import re
 import yaml 
 import requests
 import webbrowser
 import pandas as pd 
 import streamlit as st
 from io import BytesIO 
-from dotenv import load_dotenv
 from rmb_converter import to_rmb_upper
 import streamlit_authenticator as stauth
-
-load_dotenv()
-receipt_url = st.secrets["general"]["receipt_url"]
-contract_url = st.secrets["general"]["contract_url"]
-data_url = st.secrets["general"]["data_url"]
-receipt_download = st.secrets["general"]["receipt_download"]
 
 # load config
 with open('config.yaml') as file:
@@ -22,13 +15,37 @@ with open('config.yaml') as file:
 username, password = st.secrets['auth']['username'], st.secrets['auth']['password']
 config['credentials']['usernames'][username]['password'] = password
 
-# @st.cache_data
+#@st.cache_data
 def load_excel(url):
     response = requests.get(url)
     return pd.read_excel(BytesIO(response.content), sheet_name="Analytics")
 
-def millions(x, pos):
-    return f'{x*1e-6:.1f}M'  # converts 10000000 to 10.0M
+def get_google_sheet_download_link(edit_url: str, export_format: str = 'xlsx') -> str:
+    """
+    Convert a Google Sheets edit URL to a direct download link.
+    
+    Parameters:
+        edit_url (str): The original Google Sheets edit URL.
+        export_format (str): The format to export. Supported: 'xlsx', 'csv', 'pdf', 'ods', etc.
+    
+    Returns:
+        str: The direct download URL.
+    """
+    # Extract the spreadsheet ID using regex
+    match = re.search(r'/d/([a-zA-Z0-9-_]+)', edit_url)
+    if not match:
+        raise ValueError("Invalid Google Sheets URL")
+    
+    sheet_id = match.group(1)
+    
+    # Construct download link
+    download_link = f"https://docs.google.com/spreadsheets/d/{sheet_id}/export?format={export_format}"
+    return download_link
+
+receipt_url = st.secrets["general"]["receipt_url"]
+contract_url = st.secrets["general"]["contract_url"]
+data_url = st.secrets["general"]["data_url"]
+receipt_download = get_google_sheet_download_link(st.secrets["general"]["receipt_download"])
 
 authenticator = stauth.Authenticate(
     credentials=config['credentials'],
@@ -71,37 +88,34 @@ if auth_status:
         # document files
         st.subheader("Documents")
         st.markdown(f'''
-            <a href="{receipt_url}" target="_blank" style="
+            <style>
+            a.custom-button {{
                 display: inline-block;
-                background-color: #4CAF50;
-                color: white;
-                padding: 10px 24px;
+                padding: 12px 24px;
+                font-size: 16px;
+                font-weight: bold;
+                line-height: 1.5;
                 text-align: center;
                 text-decoration: none;
-                font-weight: bold;
-                border-radius: 8px;
-                margin: 4px 2px;
-                cursor: pointer;
-            ">
-                Receipt
-            </a>
-        ''', unsafe_allow_html=True)
-        
-        st.markdown(f'''
-            <a href="{contract_url}" target="_blank" style="
-                display: inline-block;
-                background-color: #4CAF50;
                 color: white;
-                padding: 10px 24px;
-                text-align: center;
-                text-decoration: none;
-                font-weight: bold;
                 border-radius: 8px;
-                margin: 4px 2px;
+                margin: 4px 8px 4px 0;
                 cursor: pointer;
-            ">
-                Contract
-            </a>
+                min-width: 140px; /* optional: ensures consistent width */
+                transition: all 0.3s ease; 
+            }}
+                    
+            a.custom-button:hover {{
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);  /* Soft shadow */
+                transform: scale(1.05);  /* Slight grow */
+            }}
+                    
+            .blue-bg {{ background-color: #4CAF50; }}
+            .green-bg {{ background-color: #4CAF50; }}
+            </style>
+
+            <a href="{receipt_url}" target="_blank" class="custom-button blue-bg">Receipt</a>
+            <a href="{contract_url}" target="_blank" class="custom-button green-bg">Contract</a>
         ''', unsafe_allow_html=True)
 
         st.subheader("Rules")
@@ -112,12 +126,15 @@ if auth_status:
                 overflow: hidden !important;
                 scrollbar-width: none !important;  /* Firefox */
             }}
+
+            /* Hide scrollbar for WebKit browsers */
             iframe::-webkit-scrollbar {{
-                display: none !important;  /* Chrome, Safari */
+                display: none !important;
             }}
+     
             </style>
 
-            <iframe src="{data_url}" width="100%" height="800px" style="max-width: 900px; border: none; overflow: hidden;"></iframe>
+            <iframe src="{data_url}" width="100%" height="600px" style="max-width: 900px; border: none; overflow: hidden;"></iframe>
             """,
             unsafe_allow_html=True
         )
