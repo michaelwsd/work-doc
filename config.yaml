@@ -1,7 +1,7 @@
 cookie:
   expiry_days: 30
-  key: abc
-  name: abc
+  key: c0e4178ecf852c7b9cf9934f2fe6d490
+  name: work_doc_auth
 credentials:
   usernames:
     shiro1729:
