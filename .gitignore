@@ -1,1 +1,6 @@
 secrets.toml
+.venv
+__pycache__
+.devcontainer
+.claude
+.streamlit
